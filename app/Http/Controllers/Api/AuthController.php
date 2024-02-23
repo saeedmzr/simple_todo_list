@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\User\RegisterRequest;
 use App\Http\Resources\UserResource;
+use App\Repositories\BaseRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AuthController extends BaseController
 {
-    private UserRepository $userRepository;
+    private BaseRepository $userRepository;
 
     public function __construct(UserRepository $userRepository)
     {

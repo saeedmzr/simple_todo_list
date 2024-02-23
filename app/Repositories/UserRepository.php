@@ -23,12 +23,10 @@ class UserRepository extends BaseRepository
         if (!Hash::check($password, $user->password)) {
             return null;
         }
-
-        // Generate a new Sanctum token for the user
         $token = $user->createToken('auth');
-
         return $token->plainTextToken;
     }
+
     public function register(array $payload)
     {
         $user = $this->model->create($payload);

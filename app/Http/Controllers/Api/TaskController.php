@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Task\CompleteTaskRequest;
 use App\Http\Requests\Task\CreateTaskRequest;
 use App\Http\Resources\TaskResource;
+use App\Repositories\BaseRepository;
 use App\Repositories\TaskRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TaskController extends BaseController
 {
-    private $taskRepository;
+    private BaseRepository $taskRepository;
 
     public function __construct(TaskRepository $taskRepository)
     {
