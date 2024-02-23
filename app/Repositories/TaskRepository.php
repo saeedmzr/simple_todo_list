@@ -12,20 +12,23 @@ use Illuminate\Support\Facades\Log;
 class TaskRepository extends BaseRepository
 {
     protected Model $model;
+    private $queryBuilder;
 
     public function __construct(Task $model)
     {
         $this->model = $model;
+        $this->queryBuilder = $this->model->newQuery();
     }
 
-    public function owned()
+    public function owned($userId = null)
     {
-        return $this->model::Owner();
+        $this->queryBuilder = $this->model::Owner($userId);
+        return $this;
     }
 
-    public function list(array $filters, int $size = 10)
+    public function filtersAndPaginate(array $filters = [], int $size = 10)
     {
-        return $this->model::filters($filters)->paginate($size);
+        return $this->queryBuilder->filters($filters)->paginate($size);
     }
 
     public function checkTaskWasCompleted($taskId)

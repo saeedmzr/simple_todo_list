@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
-    private mixed $name;
 
     /**
      * Transform the resource into an array.
@@ -19,6 +18,7 @@ class UserResource extends JsonResource
         return [
             "name" => $this->name,
             "email" => $this->email,
+
         ];
     }
 }
