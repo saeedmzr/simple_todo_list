@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->foreignIdFor(User::class)->constrained('users');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('status')->default(TaskStatusEnum::getDefaultStatus());
+            $table->string('status')->default(TaskStatusEnum::getDefaultStatus()->value);
             $table->timestamp("deadline")->nullable();
             $table->timestamp("completed_at")->nullable();
             $table->softDeletes();
