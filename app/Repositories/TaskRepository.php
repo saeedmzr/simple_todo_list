@@ -41,7 +41,7 @@ class TaskRepository extends BaseRepository
         }
     }
 
-    public function makeTaskCompleted($taskId)
+    public function makeTaskCompleted($taskId): ?bool
     {
         try {
             DB::beginTransaction();
@@ -49,8 +49,11 @@ class TaskRepository extends BaseRepository
             $task->status = TaskStatusEnum::COMPLETED;
             $task->save();
             DB::commit();
+            return true;
         } catch (\Exception $exception) {
             Log::error("Error in completing task :" . $taskId . "\nerror : " . $exception->getMessage());
+            DB::rollBack();
+            return null;
         }
     }
 
