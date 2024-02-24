@@ -9,8 +9,10 @@ use Carbon\Carbon;
 
 class TaskObserver
 {
-    public function updated(Task $task): void
+    public function updating(Task $task): void
     {
-        AddCompletedAtToCompletedTaskJob::dispatch($task);
+        $original = $task->getOriginal();
+        if ($task->isDirty('status') && $original['status'] == TaskStatusEnum::CREATED->value)
+            AddCompletedAtToCompletedTaskJob::dispatch($task);
     }
 }

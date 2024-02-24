@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\TaskStatusEnum;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -29,9 +30,8 @@ class AddCompletedAtToCompletedTaskJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //        if ($task->isDirty('status') &&
-//            in_array($task->status, [TaskStatusEnum::COMPLETED, TaskStatusEnum::SYSTEM_COMPLETED])) {
-        $this->task->update(['deadline' => Carbon::now()]);
-//        }
+
+        $this->task->update(['completed_at' => Carbon::now()]);
+
     }
 }
