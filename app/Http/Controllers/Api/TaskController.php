@@ -8,6 +8,7 @@ use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Repositories\BaseRepository;
 use App\Repositories\TaskRepository;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -46,6 +47,7 @@ class TaskController extends BaseController
 
     public function store(CreateTaskRequest $request): JsonResponse
     {
+
         $task = $this->taskRepository->create($request->validated());
 
         return $this->successResponse(
@@ -75,10 +77,10 @@ class TaskController extends BaseController
 
     public function completeTask(CompleteTaskRequest $request): JsonResponse
     {
-        $result = $this->taskRepository->owned($request->user()->id)->checkTaskWasCompleted($request->task_id);
+        $result = $this->taskRepository->owned($request->user()->id)->checkTaskWasCompleted($request->id);
         if ($result)
             return $this->errorResponse("Task was Already completed.", 403);
-        $this->taskRepository->makeTaskCompleted($request->task_id);
+        $this->taskRepository->makeTaskCompleted($request->id);
         return $this->successResponse([], "Task has been completed successfully.");
     }
 
