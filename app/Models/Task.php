@@ -19,6 +19,16 @@ class Task extends Model
 
     protected $guarded = ['id'];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'completed_at' => 'datetime:Y-m-d H:i:s',
+        'deadline' => 'datetime:Y-m-d H:i:s',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
