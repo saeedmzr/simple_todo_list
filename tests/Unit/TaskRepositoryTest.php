@@ -6,6 +6,7 @@ use App\Enums\TaskStatusEnum;
 use App\Models\Task;
 use App\Models\User;
 use App\Repositories\TaskRepository;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -58,7 +59,6 @@ class TaskRepositoryTest extends TestCase
         $updatedData = [
             'title' => 'Updated Task Title',
             'description' => 'Updated task description.',
-            // Add other fields that you want to update
         ];
 
         $this->taskRepository->update($task->id, $updatedData);
@@ -85,5 +85,23 @@ class TaskRepositoryTest extends TestCase
         $this->assertTrue($this->taskRepository->makeTaskCompleted($task->id));
         $task = $this->taskRepository->findById($task->id);
         $this->assertEquals(TaskStatusEnum::COMPLETED->value, $task->status);
+    }
+
+    /** @test */
+    public function it_can_make_tasks_complete_after_two_days()
+    {
+        $testCount = 10;
+        Task::factory()->count($testCount)->create([
+            'status' => TaskStatusEnum::CREATED,
+            'created_at' => Carbon::now()->subDays(4),
+            'completed_at' => null
+        ]);
+
+
+        $this->taskRepository->completeTasksAfterTwoDays();
+
+        $completedTasksCount = Task::where('status', TaskStatusEnum::SYSTEM_COMPLETED->value)
+            ->where('completed_at', '!=', null)->count();
+        $this->assertEquals($testCount, $completedTasksCount);
     }
 }
