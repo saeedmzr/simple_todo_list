@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class UserRepositoryTest extends TestCase
 {
