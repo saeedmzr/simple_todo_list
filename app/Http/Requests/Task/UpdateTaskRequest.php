@@ -2,17 +2,11 @@
 
 namespace App\Http\Requests\Task;
 
+use App\Enums\TaskStatusEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTaskRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -22,7 +16,10 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ["required", "string"],
+            'description' => ["nullable", "string"],
+            'deadline' => ['nullable','date_format:Y-m-d H:i:s'],
+            'status' => ['nullable', 'in:' . implode(',', TaskStatusEnum::all())],
         ];
     }
 }

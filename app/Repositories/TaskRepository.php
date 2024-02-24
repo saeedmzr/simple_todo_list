@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Enums\TaskStatusEnum;
 use App\Models\Task;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,20 +13,23 @@ use Illuminate\Support\Facades\Log;
 class TaskRepository extends BaseRepository
 {
     protected Model $model;
+    private $queryBuilder;
 
     public function __construct(Task $model)
     {
         $this->model = $model;
+        $this->queryBuilder = $this->model->newQuery();
     }
 
-    public function owned()
+    public function owned($userId = null)
     {
-        return $this->model::Owner();
+        $this->queryBuilder = $this->model::Owner($userId);
+        return $this;
     }
 
-    public function list(array $filters, int $size = 10)
+    public function filtersAndPaginate(array $filters = [], int $size = 10)
     {
-        return $this->model::filters($filters)->paginate($size);
+        return $this->queryBuilder->filters($filters)->paginate($size);
     }
 
     public function checkTaskWasCompleted($taskId)
@@ -75,6 +79,9 @@ class TaskRepository extends BaseRepository
         $this->model->where('created_at', '<', now()->subDays(2))
             ->where('status', '!=', TaskStatusEnum::COMPLETED)
             ->where('status', '!=', TaskStatusEnum::SYSTEM_COMPLETED)
-            ->update(['status' => TaskStatusEnum::SYSTEM_COMPLETED]);
+            ->update([
+                'status' => TaskStatusEnum::SYSTEM_COMPLETED,
+                'completed_at' => Carbon::now()
+            ]);
     }
 }

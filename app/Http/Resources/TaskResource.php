@@ -7,13 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TaskResource extends JsonResource
 {
-    private mixed $id;
-    private mixed $title;
-    private mixed $description;
-    private mixed $status;
-    private mixed $deadline;
-    private mixed $completed_at;
-    private mixed $user;
 
     /**
      * Transform the resource into an array.
@@ -24,12 +17,13 @@ class TaskResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "user" => new UserResource($this->user),
             "title" => $this->title,
             "description" => $this->description,
             "status" => $this->status,
             "deadline" => $this->deadline,
             "completed_at" => $this->completed_at,
+            "updated_at" => $this->updated_at,
+            "created_at" => $this->created_at,
         ];
     }
 }

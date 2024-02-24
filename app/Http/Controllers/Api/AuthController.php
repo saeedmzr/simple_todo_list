@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Repositories\BaseRepository;
@@ -20,19 +21,19 @@ class AuthController extends BaseController
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $user = $this->userRepository->register($request->validated());
+        $token = $this->userRepository->register($request->validated());
         return $this->successResponse(
-            ['access_token' => $this],
+            ['access_token' => $token],
             'You signed up successfully.'
         );
     }
 
-    public function login(RegisterRequest $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
         $token = $this->userRepository->login($request->email, $request->password);
         if (!$token) return $this->errorResponse('Invalid credentials.', 422);
         return $this->successResponse(
-            ['access_token' => $this],
+            ['access_token' => $token],
             'You signed in successfully.'
         );
     }

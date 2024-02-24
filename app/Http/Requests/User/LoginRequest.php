@@ -7,9 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 class LoginRequest extends FormRequest
 {
 
-    public mixed $password;
-    public mixed $email;
-
     public function rules(): array
     {
         return [
