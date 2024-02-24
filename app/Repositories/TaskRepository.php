@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Enums\TaskStatusEnum;
 use App\Models\Task;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -78,6 +79,9 @@ class TaskRepository extends BaseRepository
         $this->model->where('created_at', '<', now()->subDays(2))
             ->where('status', '!=', TaskStatusEnum::COMPLETED)
             ->where('status', '!=', TaskStatusEnum::SYSTEM_COMPLETED)
-            ->update(['status' => TaskStatusEnum::SYSTEM_COMPLETED]);
+            ->update([
+                'status' => TaskStatusEnum::SYSTEM_COMPLETED,
+                'completed_at' => Carbon::now()
+            ]);
     }
 }
