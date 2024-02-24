@@ -1,0 +1,60 @@
+version: "3.8"
+services:
+    app:
+        container_name: app
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+        expose:
+            - 9000
+        volumes:
+            - .:/usr/src/app
+            - ./public:/usr/src/app/public
+        depends_on:
+            - db
+        networks:
+            - app_network
+
+    nginx:
+        container_name: nginx
+        build:
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
+        volumes:
+            - ./public:/usr/src/app/public
+        ports:
+            - "8000:80"
+        depends_on:
+            - app
+        environment:
+            NGINX_FPM_HOST: app
+            NGINX_ROOT: /usr/src/app/public
+        networks:
+            - app_network
+
+    db:
+        container_name: db
+        image: mysql:8.0.20
+        restart: always
+        volumes:
+            - ./storage/db-data:/var/lib/mysql
+        ports:
+            - "3310:3306"
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD:
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+        networks:
+            - app_network
+
+    redis:
+        container_name: redis
+        image: redis:latest
+        ports:
+            - "6382:6379"
+        networks:
+            - app_network
+networks:
+    app_network:
+        driver: bridge
