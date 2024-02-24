@@ -29,7 +29,7 @@ class TaskFactory extends Factory
             'description' => $this->faker->optional()->paragraph,
             'status' => TaskStatusEnum::random(),
             'deadline' => $this->faker->optional()->dateTimeBetween('-1 month', '+1 month'),
-            'completed_at' => null,
+            'completed_at' => $this->faker->optional()->dateTimeBetween('-1 month', '+1 month'),
             'created_at' => now(),
             'updated_at' => now(),
         ];
