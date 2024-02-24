@@ -21,8 +21,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
     Route::apiResource('tasks', TaskController::class);
-    Route::group(['prefix' => 'tasks'], function () {
-        Route::post('complete', [TaskController::class, 'completeTask']);
+    Route::group(['prefix' => 'tasks','as' => 'tasks.'], function () {
+        Route::post('complete', [TaskController::class, 'completeTask'])->name('completeTask');
     });
 
 });
