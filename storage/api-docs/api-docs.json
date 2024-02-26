@@ -1,0 +1,557 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tasks Management API",
+        "description": "This is an example API for tasks management",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api/",
+            "description": "Base path for all API endpoints"
+        }
+    ],
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User registration",
+                "description": "Registers a new user with the provided details.",
+                "operationId": "08136088c4862c313b35d6518bab8d3a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterSchema"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User login",
+                "description": "Logs in a user with the provided credentials.",
+                "operationId": "99d66635c4992aeaa6aa44ff653d0563",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginSchema"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User logged in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/auth/get": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get user information",
+                "description": "Retrieves information of the authenticated user.",
+                "operationId": "84d74e5a4a54ec53ea2ea7f7cc7da12c",
+                "responses": {
+                    "200": {
+                        "description": "User information retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserSchema"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User logout",
+                "description": "Logs out the authenticated user.",
+                "operationId": "6abf3b64a4bc7838d56346f05a5153af",
+                "responses": {
+                    "200": {
+                        "description": "User logged out successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/tasks": {
+            "get": {
+                "tags": [
+                    "Task Management"
+                ],
+                "summary": "Get a paginated list of tasks",
+                "description": "Retrieves a list of tasks owned by the authenticated user. Use query parameters for filtering and pagination.",
+                "operationId": "7786da811325606208249ebc8d393d9a",
+                "parameters": [
+                    {
+                        "name": "filters",
+                        "in": "query",
+                        "description": "Optional filters for searching tasks (refer to your specific implementation)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "description": "Filter tasks by their status",
+                                "type": "string",
+                                "enum": [
+                                    "completed",
+                                    "create",
+                                    "system_completed"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of items per page (default 10)",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TaskSchema"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctumAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Task Management"
+                ],
+                "summary": "Create a new task",
+                "description": "Creates a new task with the provided details.",
+                "operationId": "a737e990cef5769592bc41ee6a62f7f1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTaskSchema"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Task created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/TaskSchema"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                }
+            }
+        },
+        "/tasks/{taskId}": {
+            "get": {
+                "tags": [
+                    "Task Management"
+                ],
+                "summary": "Get a task by ID",
+                "description": "Retrieves a single task identified by its ID.",
+                "operationId": "1692100eb15f2f5e3aa04c5e9055bcea",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "description": "ID of the task",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskSchema"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Task not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Task Management"
+                ],
+                "summary": "Update a task",
+                "description": "Updates an existing task with the provided details.",
+                "operationId": "6a6b92e94ecbde1a851fca6028847e1d",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "description": "ID of the task to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTaskSchema"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Task updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/TaskSchema"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden: Could not update this task"
+                    },
+                    "404": {
+                        "description": "Task not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Task Management"
+                ],
+                "summary": "Delete a task",
+                "description": "Deletes a task with the provided ID.",
+                "operationId": "fd1f7e7ce0772a056265defecf813e67",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "description": "ID of the task to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Task deleted successfully"
+                    },
+                    "404": {
+                        "description": "Task not found"
+                    }
+                }
+            }
+        },
+        "/tasks/complete": {
+            "post": {
+                "tags": [
+                    "Task Management"
+                ],
+                "summary": "Complete a task",
+                "description": "Marks a task as completed.",
+                "operationId": "1b319562f0d5789aba49793c9eaf8a4b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CompleteTaskSchema"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Task completed successfully"
+                    },
+                    "403": {
+                        "description": "Forbidden: Task was already completed"
+                    },
+                    "404": {
+                        "description": "Task not found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CompleteTaskSchema": {
+                "properties": {
+                    "id": {
+                        "description": "task's id",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateTaskSchema": {
+                "properties": {
+                    "title": {
+                        "description": "task's title",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "task's description",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "task's status",
+                        "type": "string"
+                    },
+                    "deadline": {
+                        "description": "task's deadline",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateTaskSchema": {
+                "properties": {
+                    "title": {
+                        "description": "task's title",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "task's description",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "task's status",
+                        "type": "string"
+                    },
+                    "deadline": {
+                        "description": "task's deadline",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginSchema": {
+                "properties": {
+                    "email": {
+                        "description": "user's email",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "user's password",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterSchema": {
+                "properties": {
+                    "name": {
+                        "description": "user's name",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "user's email that should be unique",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "user's password",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TaskSchema": {
+                "properties": {
+                    "id": {
+                        "description": "Task ID",
+                        "type": "integer"
+                    },
+                    "title": {
+                        "description": "Task title",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Task description",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "Task status",
+                        "type": "string"
+                    },
+                    "deadline": {
+                        "description": "Task deadline datetime",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "completed_at": {
+                        "description": "Task completed_at datetime",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Task updated_at datetime",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "description": "Task created_at datetime",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "UserSchema": {
+                "properties": {
+                    "name": {
+                        "description": "User's name",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "User's email",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctumAuth": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication"
+        },
+        {
+            "name": "Task Management"
+        }
+    ]
+}

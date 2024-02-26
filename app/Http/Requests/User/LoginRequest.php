@@ -3,7 +3,22 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+/**
+ * @OA\Schema(
+ *     schema="LoginSchema",
 
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         description="user's email"
+ *     ),
+ *     @OA\Property(
+ *         property="password",
+ *         type="string",
+ *         description="user's password"
+ *     ),
+ * )
+ */
 class LoginRequest extends FormRequest
 {
 

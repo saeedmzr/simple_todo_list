@@ -4,7 +4,32 @@ namespace App\Http\Requests\Task;
 
 use App\Enums\TaskStatusEnum;
 use Illuminate\Foundation\Http\FormRequest;
+/**
+ * @OA\Schema(
+ *     schema="UpdateTaskSchema",
+ *     @OA\Property(
+ *         property="title",
+ *         type="string",
+ *         description="task's title"
+ *     ),
+ *     @OA\Property(
+ *         property="description",
+ *         type="string",
+ *         description="task's description"
+ *     ),
+ *     @OA\Property(
+ *         property="status",
+ *         type="string",
+ *         description="task's status"
+ *     ),
+ *     @OA\Property(
+ *         property="deadline",
+ *         type="datetime",
+ *         description="task's deadline"
+ *     ),
 
+ * )
+ */
 class UpdateTaskRequest extends FormRequest
 {
 
