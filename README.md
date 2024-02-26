@@ -51,6 +51,34 @@ This repository contains the source code for TodoList, a Laravel 10 application 
 
 `.\vendor\bin\sail up -d`
 
+
+## Broadcasting with Pusher
+
+TodoList utilizes Laravel's broadcasting feature with Pusher to provide real-time updates to users. Whenever a task is updated, such as being created, updated, or deleted, all connected users receive immediate updates without needing to refresh the page.
+
+### How It Works
+
+1. **Event Triggering**: Whenever a task-related action occurs, such as creating, updating, or deleting a task, an event is triggered in the application.
+
+2. **Broadcasting Event**: The triggered event is then broadcasted to Pusher, a real-time messaging service, which acts as a bridge between the server and connected clients.
+
+3. **Client Listening**: Clients, such as web browsers, mobile apps, or other devices, listen for events from Pusher. When an event is received, the client updates the user interface in real-time to reflect the changes.
+
+### Channel Authorization
+
+To ensure that users only receive updates for tasks they have access to, TodoList implements channel authorization. This means that users are only subscribed to channels for tasks they own or have permission to access.
+
+
+```<?php
+use App\Models\User;
+use App\Models\Task;
+use Illuminate\Support\Facades\Broadcast;
+
+Broadcast::channel('tasks.{taskId}', function (User $user, int $taskId) {
+    return $user->id === Task::findOrNew($taskId)->user_id;
+});
+```
+
 ### Testing
 
 This project prioritizes code quality and maintainability through a robust testing suite. It includes a total of 20 well-structured unit and feature tests that cover various aspects of the application, including:
@@ -79,3 +107,13 @@ This project prioritizes code quality and maintainability through a robust testi
 ##### 3. Run the tests using the following command: `php artisan test --env=testing` 
 
 #### This ensures your tests are isolated and don't modify data in your production environment.
+
+### Documentation: 
+#### Documentation for this project is generated using Swagger. To view the documentation, you can run the following command:
+`php artisan l5-swagger:generate`
+
+#### Once generated, you can access the documentation through the endpoint /api/documentation#/. This provides comprehensive details about the API endpoints and their functionalities.
+
+
+
+
