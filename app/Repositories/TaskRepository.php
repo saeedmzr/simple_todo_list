@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Enums\TaskStatusEnum;
+use App\Events\UpdateTaskEvent;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -76,12 +77,17 @@ class TaskRepository extends BaseRepository
 
     public function completeTasksAfterTwoDays(): void
     {
-        $this->model->where('created_at', '<', now()->subDays(2))
+        $taskIds = $this->model->query()->where('created_at', '<', now()->subDays(2))
             ->where('status', '!=', TaskStatusEnum::COMPLETED)
-            ->where('status', '!=', TaskStatusEnum::SYSTEM_COMPLETED)
-            ->update([
-                'status' => TaskStatusEnum::SYSTEM_COMPLETED,
-                'completed_at' => Carbon::now()
-            ]);
+            ->where('status', '!=', TaskStatusEnum::SYSTEM_COMPLETED)->pluck('id')->toArray();
+
+        $this->model->query()->whereIn("id", $taskIds)->update([
+            'status' => TaskStatusEnum::SYSTEM_COMPLETED,
+            'completed_at' => Carbon::now()
+        ]);
+        foreach ($taskIds as $taskId) {
+            $task = $this->findById($taskId);
+            event(new UpdateTaskEvent($task));
+        }
     }
 }
