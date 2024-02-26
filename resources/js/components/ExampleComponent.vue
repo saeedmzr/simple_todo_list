@@ -6,7 +6,7 @@
                     <div class="card-header">Example Component</div>
 
                     <div class="card-body">
-                        I'm an example component.
+                        {{ message }}
                     </div>
                 </div>
             </div>
@@ -15,9 +15,25 @@
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
+export default {
+
+    updated() {
+
+    },
+    data() {
+        return {
+            message: 'hello'
         }
+    },
+    mounted() {
+
+        Echo.private(`task.2`)
+            .listen('task', (e) => {
+                console.log(e.data);
+                this.message = 'ahmad'
+                alert(e);
+            });
+        console.log('Component mounted.')
     }
+}
 </script>
