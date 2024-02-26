@@ -9,6 +9,25 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @OA\Info(
+ *     description="This is an example API for tasks management",
+ *     version="1.0.0",
+ *     title="Tasks Management API"
+ * )
+ * @OA\Server(
+ *       url="/api/",
+ *       description="Base path for all API endpoints"
+ *   )
+ * @OA\SecurityScheme(
+ * *      type="apiKey",
+ * *      in="header",
+ * *      name="Authorization",
+ * *      securityScheme="sanctumAuth"
+ * *  )
+ */
+
+
 abstract class BaseController extends Controller
 {
     /**

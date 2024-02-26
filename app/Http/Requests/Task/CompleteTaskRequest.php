@@ -4,6 +4,18 @@ namespace App\Http\Requests\Task;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="CompleteTaskSchema",
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         description="task's id"
+ *     ),
+
+ * )
+ */
+
 class CompleteTaskRequest extends FormRequest
 {
     /**

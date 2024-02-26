@@ -3,13 +3,28 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+/**
+ * @OA\Schema(
+ *     schema="RegisterSchema",
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         description="user's name"
+ *     ),
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         description="user's email that should be unique"
+ *     ),
+ *     @OA\Property(
+ *         property="password",
+ *         type="string",
+ *         description="user's password"
+ *     ),
+ * )
+ */
 class RegisterRequest extends FormRequest
 {
-
-    public mixed $password;
-    public mixed $email;
-    public mixed $name;
 
     public function rules(): array
     {
