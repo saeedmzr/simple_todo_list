@@ -2,7 +2,13 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TaskController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+
+
+
+
 
 
 Route::group(['prefix' => 'auth'], function () {
@@ -21,7 +27,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
     Route::apiResource('tasks', TaskController::class);
-    Route::group(['prefix' => 'tasks','as' => 'tasks.'], function () {
+    Route::group(['prefix' => 'tasks', 'as' => 'tasks.'], function () {
         Route::post('complete', [TaskController::class, 'completeTask'])->name('completeTask');
     });
 

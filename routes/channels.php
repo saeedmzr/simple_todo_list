@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Task;
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -12,7 +14,8 @@ use Illuminate\Support\Facades\Broadcast;
 | used to check if an authenticated user can listen to the channel.
 |
 */
-
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+//
+Broadcast::channel('tasks.{taskId}', function (User $user, int $taskId) {
+    return $user->id === Task::findOrNew($taskId)->user_id;
 });
+

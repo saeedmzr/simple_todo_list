@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\UpdateTaskEvent;
 use App\Http\Requests\Task\CompleteTaskRequest;
 use App\Http\Requests\Task\CreateTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
@@ -62,6 +63,8 @@ class TaskController extends BaseController
         try {
             $this->taskRepository->owned($request->user()->id)->update($taskId, $request->validated());
             $task = $this->taskRepository->owned($request->user()->id)->findById($taskId);
+            event(new UpdateTaskEvent($task));
+
             return $this->successResponse(
                 new TaskResource($task),
                 "Task has been updated successfully.",
@@ -77,10 +80,13 @@ class TaskController extends BaseController
 
     public function completeTask(CompleteTaskRequest $request): JsonResponse
     {
-        $result = $this->taskRepository->owned($request->user()->id)->checkTaskWasCompleted($request->id);
+        $taskId = $request->id;
+        $result = $this->taskRepository->owned($request->user()->id)->checkTaskWasCompleted($taskId);
         if ($result)
             return $this->errorResponse("Task was Already completed.", 403);
-        $this->taskRepository->makeTaskCompleted($request->id);
+        $this->taskRepository->makeTaskCompleted($taskId);
+        $task = $this->taskRepository->owned($request->user()->id)->findById($taskId);
+        event(new UpdateTaskEvent($task));
         return $this->successResponse([], "Task has been completed successfully.");
     }
 
