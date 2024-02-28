@@ -10,6 +10,7 @@ use App\Repositories\BaseRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\Tag(name="Authentication")
@@ -144,20 +145,24 @@ class AuthController extends BaseController
         $user->tokens()->delete();
         return $this->successResponse([], 'Successfully logged out.',);
     }
+
     /**
      * @OA\Post(
-     *     path="/broadcast/token",
-     *     summary="Generate a temporary Pusher token for broadcasting",
-     *     description="Generates a temporary Pusher token for the authenticated user to use in broadcasting operations.",
+     *     path="/auth/broadcasting/token",
+     *     summary="Broadcasting token",
+     *          tags={"Authentication"},
+     *     description="Get token for authorization broadcasting.",
+     *     security={{"bearerAuth": {}}},
      *     @OA\Response(
-     *         response=200,
-     *         description="Token generated successfully",
+     *          response=200,
+     *          description="Successfully fetched token for broadcasting.",
      *         @OA\JsonContent(
-     *             @OA\Property(property="channel_data", type="string"),
-     *     ),
+     *           @OA\Property(property="channel_data", type="string")
+     *          ),
+     *      ),
      *     @OA\Response(
      *         response=401,
-     *         description="Unauthorized: Invalid or missing user information"
+     *         description="Unauthorized"
      *     )
      * )
      */

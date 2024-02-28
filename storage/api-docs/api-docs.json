@@ -145,6 +145,41 @@
                 ]
             }
         },
+        "/auth/broadcasting/token": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Broadcasting token",
+                "description": "Get token for authorization broadcasting.",
+                "operationId": "719aeafad6a44076ef7ffacb8d3594f6",
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched token for broadcasting.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "channel_data": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/tasks": {
             "get": {
                 "tags": [
